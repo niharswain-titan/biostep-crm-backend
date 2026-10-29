@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Clinic {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  leads  Lead[]
+  orders Order[]
+}
+
+model Lead {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  status    String   @default("New")
+  value     Int      @default(0)
+  source    String   @default("BIOSTEP Website")
+  createdAt DateTime @default(now())
+  clinicId  Int
+  clinic    Clinic   @relation(fields: [clinicId], references: [id])
+}
+
+model Order {
+  id           String   @id
+  channel      String
+  items        Int
+  totalAmount  Int
+  status       String   @default("Pending")
+  orderDate    DateTime @default(now())
+  customerName String?
+  clinicId     Int?
+  clinic       Clinic?  @relation(fields: [clinicId], references: [id])
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+}
