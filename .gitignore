@@ -6,3 +6,6 @@ node_modules
 node_modules/
 .env
 dev.db
+node_modules/
+.env
+dev.db
