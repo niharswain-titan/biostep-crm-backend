@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BIOSTEP Test Login</title>
+    <style>
+        body { font-family: sans-serif; background: #F5F0E8; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 300px; }
+        h2 { color: #D63031; margin-top: 0; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #D63031; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        #msg { margin-top: 15px; font-size: 14px; color: #333; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>BIOSTEP Login</h2>
+        <input type="email" id="email" placeholder="Email" value="admin@biostep.com">
+        <input type="password" id="password" placeholder="Password" value="password123">
+        <button onclick="login()">Login</button>
+        <div id="msg"></div>
+    </div>
+    <script>
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const msg = document.getElementById('msg');
+            msg.innerText = "Loading...";
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    msg.innerHTML = '<span style="color:green">Success! Token: ' + data.token.substring(0, 15) + '...</span>';
+                } else {
+                    msg.innerHTML = '<span style="color:red">' + data.error + '</span>';
+                }
+            } catch (err) {
+                msg.innerHTML = '<span style="color:red">Server error.</span>';
+            }
+        }
+    </script>
+</body>
+</html>
